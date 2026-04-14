@@ -1,10 +1,28 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, effect, Injectable, signal } from '@angular/core';
 import { Product } from '../interfaces/product';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShoppingService {
+  private shoppingListKey: string = "shoppingList"
+
+  constructor() {
+    const cache = localStorage.getItem(this.shoppingListKey)
+    if (cache) {
+      const data = JSON.parse(cache)
+      this.products.set(data)
+      this.nextId = Math.max(0, ...this.products().map(val => val.id)) + 1
+    }
+
+    effect(() =>
+      localStorage.setItem(
+        this.shoppingListKey,
+        JSON.stringify(this.products())
+      )
+    )
+  }
+
   private nextId = 1;
 
   filteredProducts = computed(() => this.filterProducts(this.products(), this.category()))
@@ -56,7 +74,7 @@ export class ShoppingService {
     this.products.update(list => list.filter((val) => !val.bought))
   }
 
-  setCategory(category: "All" | "To buy" | "Bought"){
+  setCategory(category: "All" | "To buy" | "Bought") {
     this.category.set(category)
   }
 
