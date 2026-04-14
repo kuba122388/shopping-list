@@ -1,5 +1,6 @@
-import { Component, computed, signal } from '@angular/core';
-import { Product } from '../../interfaces/product';
+import { Component, inject } from '@angular/core';
+import { ShoppingService } from '../../services/shopping';
+
 
 @Component({
   selector: 'app-user-list',
@@ -8,57 +9,32 @@ import { Product } from '../../interfaces/product';
   styleUrl: './user-list.scss',
 })
 export class UserList {
-  private nextId = 1;
+  private shoppingService = inject(ShoppingService)
 
-  filteredProducts = computed(() => this.filterProducts(this.products(), this.category()))
-  allProdCount = computed(() => this.products().length)
-  toBuyProdCount = computed(() => this.filterProducts(this.products(), "To buy").length)
-  boughtProdCount = computed(() => this.filterProducts(this.products(), "Bought").length)
-  
+  products = this.shoppingService.filteredProducts
+  prodToBuyCount = this.shoppingService.toBuyProdCount
+  prodBoughtCount = this.shoppingService.boughtProdCount
+  prodCount = this.shoppingService.allProdCount
+  category = this.shoppingService.getCategory
 
-  products = signal<Product[]>([])
-  category = signal<"All" | "To buy" | "Bought">("All")
-
-  private filterProducts(
-    products: Product[],
-    category: "All" | "To buy" | "Bought"
-  ): Product[] {
-    switch (category) {
-      case "All":
-        return products;
-
-      case "To buy":
-        return products.filter(p => !p.bought);
-
-      case "Bought":
-        return products.filter(p => p.bought);
-    }
+  addProduct(name: string) {
+    this.shoppingService.addProduct(name)
   }
 
-  addProuct(newProduct: string) {
-    if (!newProduct.trim()) return;
-
-    this.products.update(list => [
-      ...list,
-      {
-        id: this.nextId++,
-        name: newProduct,
-        bought: false
-      }
-    ]);
+  toggleProduct(id: number) {
+    this.shoppingService.toggleProduct(id)
   }
 
-  removeProduct(chosenProductId: number) {
-    this.products.update(list => list.filter((val) => val.id != chosenProductId))
+  removeProduct(productId: number){
+    this.shoppingService.removeProduct(productId)
   }
 
-  toggleProduct(productId: number) {
-    this.products.update(list => list.map((val) => val.id !== productId ? val : { ...val, bought: !val.bought }))
+  deleteBoughtProducts(){
+    this.shoppingService.deleteBought()
   }
 
-  deleteBought() {
-    this.products.update(list => list.filter((val) => !val.bought))
+  setCategory(category: "All" | "To buy" | "Bought"){
+    this.shoppingService.setCategory(category)
   }
-
 }
 
