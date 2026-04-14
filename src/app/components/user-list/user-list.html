@@ -1,0 +1,37 @@
+<p>Moja lista produktów:</p>
+
+<div>
+  <input #prodinput placeholder="Podaj kolejny produkt">
+  <button (click)="addProuct(prodinput.value); prodinput.value=''">Dodaj</button>
+</div>
+
+<ul>
+  @for (product of filteredProducts(); track product.id) {
+  <li [class.bought] = "product.bought" (click) = "toggleProduct(product.id)">
+    Produkt: {{ product.name }}
+    <button (click)="$event.stopPropagation(); removeProduct(product.id)">Usuń</button>
+  </li>
+  }
+</ul>
+
+<p>
+  Delete all bought products <button (click)="deleteBought()">Delete</button>
+</p>
+
+<p>
+  All products count: {{allProdCount()}} <br>
+  Products to buy count: {{toBuyProdCount()}} <br>
+  Products bought count: {{boughtProdCount()}} <br>
+</p>
+
+<p>
+  <button (click) = "category.set('All')">Wszystkie</button>
+  <button (click) = "category.set('To buy')">Do kupienia</button>
+  <button (click) = "category.set('Bought')">Kupione</button>
+</p>
+
+<p>
+  Chosen filter: {{category()}}<br>
+  Filtered products count: {{filteredProducts().length}}
+</p>
+
