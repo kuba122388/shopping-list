@@ -1,59 +1,195 @@
-# ShoppingList
+# 🛒 Modern Angular Shopping List
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+A simple yet powerful shopping list application built with **Angular 21**.
+This project demonstrates modern Angular development using **Signals**, clean architecture, and reactive state management.
 
-## Development server
+---
 
-To start a local development server, run:
+## ✨ Features
+
+* ✅ Add, remove, and toggle products
+* 🔄 Real-time updates using Angular Signals
+* 📊 Live statistics (total, to buy, bought)
+* 🔍 Filter products by category:
+
+  * All
+  * To Buy
+  * Bought
+* 🧹 Bulk delete of bought products
+* 💾 Persistent storage with `localStorage`
+* 🎨 Clean and responsive UI with hover effects
+
+---
+
+## 🛠️ Tech Stack
+
+* **Angular 21**
+* **TypeScript**
+* **Angular Signals** (`signal`, `computed`, `effect`)
+* **SCSS**
+* **Standalone Components**
+
+---
+
+## 🧠 Architecture & Concepts
+
+### 🔹 State Management (Signals)
+
+The application uses Angular Signals for reactive state:
+
+* `signal()` → holds state
+* `computed()` → derives data
+* `effect()` → side effects (localStorage sync)
+
+---
+
+### 🔹 Service-Based Architecture
+
+All business logic is handled inside a dedicated service:
+
+```ts
+ShoppingService
+```
+
+Responsibilities:
+
+* managing products state
+* filtering logic
+* handling CRUD operations
+* syncing with localStorage
+
+---
+
+### 🔹 Data Models
+
+#### Product Interface
+
+```ts
+export interface Product {
+  id: number;
+  name: string;
+  bought: boolean;
+}
+```
+
+#### Category Enum
+
+```ts
+export enum Category {
+  All = "All",
+  ToBuy = "To buy",
+  Bought = "Bought",
+}
+```
+
+---
+
+### 🔹 Reactive Derived State
+
+Examples of computed values:
+
+* filtered products
+* product counts
+* category-based filtering
+
+```ts
+filteredProducts = computed(() =>
+  this.filterProducts(this.products(), this.category())
+);
+```
+
+---
+
+## 🎨 UI Highlights
+
+* Responsive layout
+* Smooth hover effects
+* Visual distinction for bought items
+* Clean and minimal design
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+* Node.js (LTS recommended)
+* Angular CLI
+
+---
+
+### Installation
+
+```bash
+git clone https://github.com/your-username/shopping-list.git
+cd shopping-list
+npm install
+ng serve
+```
+
+---
+
+### Run the app
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Then open:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── components/
+│   │   └── user-list/
+│   ├── services/
+│   │   └── shopping.service.ts
+│   ├── models/
+│   │   └── category.ts
+│   ├── interfaces/
+│   │   └── product.ts
 ```
 
-## Building
+---
 
-To build the project run:
+## 🔥 Key Learnings
 
-```bash
-ng build
-```
+This project demonstrates:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+* Modern Angular (Signals-based)
+* Separation of concerns (UI vs logic)
+* Reactive thinking without RxJS
+* Clean and scalable architecture
+* Local storage persistence
 
-## Running unit tests
+---
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 📌 Future Improvements
 
-```bash
-ng test
-```
+* ✏️ Edit product name
+* 🔍 Search functionality
+* 📡 API integration (HttpClient + RxJS)
+* 🎬 Animations
+* 📱 Mobile UX improvements
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## 👨‍💻 Author
 
-```bash
-ng e2e
-```
+Built as a learning project to master modern Angular patterns.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## ⭐ Summary
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project is a great example of:
+
+> **Modern Angular without unnecessary complexity — clean, reactive, and scalable.**
