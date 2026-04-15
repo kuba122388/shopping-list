@@ -8,6 +8,10 @@ import { Category } from '../models/category';
 export class ShoppingService {
   private shoppingListKey = "shoppingList"
 
+  /**
+ * Initializes the shopping list state.
+ * Loads data from localStorage (if available) and keeps it in sync using an Angular effect.
+ */
   constructor() {
     const cache = localStorage.getItem(this.shoppingListKey)
     if (cache) {
@@ -30,7 +34,10 @@ export class ShoppingService {
 
   private nextId = 1;
 
+  /** Stores the list of all products */
   private products = signal<Product[]>([])
+
+  /** Currently selected filter category */
   private category = signal<Category>(Category.All)
 
   filteredProducts = computed(() => this.filterProducts(this.products(), this.category()))
@@ -44,6 +51,9 @@ export class ShoppingService {
   boughtProdCount = computed(() => this.boughtProducts().length);
 
 
+  /**
+ * Filters products based on selected category.
+ */
   private filterProducts(
     products: Product[],
     category: Category
@@ -60,6 +70,10 @@ export class ShoppingService {
     }
   }
 
+  /**
+ * Adds a new product to the list.
+ * Ignores empty input values.
+ */
   addProduct(newProduct: string) {
     if (!newProduct.trim()) return;
 
@@ -73,18 +87,30 @@ export class ShoppingService {
     ]);
   }
 
+  /**
+   * Removes a product from the list by its id.
+   */
   removeProduct(chosenProductId: number) {
     this.products.update(list => list.filter((val) => val.id != chosenProductId))
   }
 
+  /**
+ * Toggles the 'bought' status of a product.
+ */
   toggleProduct(productId: number) {
     this.products.update(list => list.map((val) => val.id !== productId ? val : { ...val, bought: !val.bought }))
   }
 
+  /**
+ * Removes all products marked as bought.
+ */
   deleteBought() {
     this.products.update(list => list.filter((val) => !val.bought))
   }
 
+  /**
+ * Updates the current filter category.
+ */
   setCategory(category: Category) {
     this.category.set(category)
   }
