@@ -1,4 +1,4 @@
-<p>Moja lista produktów:</p>
+<h1>Moja lista produktów:</h1>
 
 <div>
   <input #prodinput placeholder="Podaj kolejny produkt">
@@ -8,7 +8,7 @@
 <ul>
   @for (product of products(); track product.id) {
   <li [class.bought] = "product.bought" (click) = "toggleProduct(product.id)">
-    Produkt: {{ product.name }}
+    <span class="name">Produkt: {{ product.name }}</span>
     <button (click)="$event.stopPropagation(); removeProduct(product.id)">Usuń</button>
   </li>
   }
@@ -24,7 +24,7 @@
   Products bought count: {{prodBoughtCount()}} <br>
 </p>
 
-<p>
+<p class="filters">
   <button (click) = "setCategory('All')">Wszystkie</button>
   <button (click) = "setCategory('To buy')">Do kupienia</button>
   <button (click) = "setCategory('Bought')">Kupione</button>
