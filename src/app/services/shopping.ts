@@ -1,18 +1,23 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { Product } from '../interfaces/product';
+import { Category } from '../models/category';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShoppingService {
-  private shoppingListKey: string = "shoppingList"
+  private shoppingListKey = "shoppingList"
 
   constructor() {
     const cache = localStorage.getItem(this.shoppingListKey)
     if (cache) {
-      const data = JSON.parse(cache)
-      this.products.set(data)
-      this.nextId = Math.max(0, ...this.products().map(val => val.id)) + 1
+      try {
+        const data = JSON.parse(cache)
+        this.products.set(data)
+        this.nextId = Math.max(0, ...this.products().map(val => val.id)) + 1
+      } catch {
+        console.warn('Invalid localStorage')
+      }
     }
 
     effect(() =>
@@ -25,26 +30,32 @@ export class ShoppingService {
 
   private nextId = 1;
 
-  filteredProducts = computed(() => this.filterProducts(this.products(), this.category()))
-  allProdCount = computed(() => this.products().length)
-  toBuyProdCount = computed(() => this.filterProducts(this.products(), "To buy").length)
-  boughtProdCount = computed(() => this.filterProducts(this.products(), "Bought").length)
-
   private products = signal<Product[]>([])
-  private category = signal<"All" | "To buy" | "Bought">("All")
+  private category = signal<Category>(Category.All)
+
+  filteredProducts = computed(() => this.filterProducts(this.products(), this.category()))
+  filteredProdCount = computed(() => this.filteredProducts().length)
+  allProdCount = computed(() => this.products().length)
+
+  toBuyProducts = computed(() => this.filterProducts(this.products(), Category.ToBuy));
+  boughtProducts = computed(() => this.filterProducts(this.products(), Category.Bought));
+
+  toBuyProdCount = computed(() => this.toBuyProducts().length);
+  boughtProdCount = computed(() => this.boughtProducts().length);
+
 
   private filterProducts(
     products: Product[],
-    category: "All" | "To buy" | "Bought"
+    category: Category
   ): Product[] {
     switch (category) {
-      case "All":
+      case Category.All:
         return products;
 
-      case "To buy":
+      case Category.ToBuy:
         return products.filter(p => !p.bought);
 
-      case "Bought":
+      case Category.Bought:
         return products.filter(p => p.bought);
     }
   }
@@ -74,7 +85,7 @@ export class ShoppingService {
     this.products.update(list => list.filter((val) => !val.bought))
   }
 
-  setCategory(category: "All" | "To buy" | "Bought") {
+  setCategory(category: Category) {
     this.category.set(category)
   }
 

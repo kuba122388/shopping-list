@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ShoppingService } from '../../services/shopping';
+import { Category } from '../../models/category';
 
 
 @Component({
@@ -11,10 +12,13 @@ import { ShoppingService } from '../../services/shopping';
 export class UserList {
   private shoppingService = inject(ShoppingService)
 
-  products = this.shoppingService.filteredProducts
+  Category=Category;
+
+  filteredProducts = this.shoppingService.filteredProducts
   prodToBuyCount = this.shoppingService.toBuyProdCount
   prodBoughtCount = this.shoppingService.boughtProdCount
   prodCount = this.shoppingService.allProdCount
+  filteredProdCount = this.shoppingService.filteredProdCount
   category = this.shoppingService.getCategory
 
   addProduct(name: string) {
@@ -33,7 +37,7 @@ export class UserList {
     this.shoppingService.deleteBought()
   }
 
-  setCategory(category: "All" | "To buy" | "Bought"){
+  setCategory(category: Category){
     this.shoppingService.setCategory(category)
   }
 }

@@ -6,7 +6,7 @@
 </div>
 
 <ul>
-  @for (product of products(); track product.id) {
+  @for (product of filteredProducts(); track product.id) {
   <li [class.bought] = "product.bought" (click) = "toggleProduct(product.id)">
     <span class="name">Produkt: {{ product.name }}</span>
     <button (click)="$event.stopPropagation(); removeProduct(product.id)">Usuń</button>
@@ -25,13 +25,13 @@
 </p>
 
 <p class="filters">
-  <button (click) = "setCategory('All')">Wszystkie</button>
-  <button (click) = "setCategory('To buy')">Do kupienia</button>
-  <button (click) = "setCategory('Bought')">Kupione</button>
+  <button (click) = "setCategory(Category.All)">Wszystkie</button>
+  <button (click) = "setCategory(Category.ToBuy)">Do kupienia</button>
+  <button (click) = "setCategory(Category.Bought)">Kupione</button>
 </p>
 
 <p>
   Chosen filter: {{category()}}<br>
-  Filtered products count: {{products().length}}
+  Filtered products count: {{filteredProdCount()}}
 </p>
 
