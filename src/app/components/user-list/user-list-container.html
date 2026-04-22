@@ -1,0 +1,13 @@
+<app-user-list
+  [products]="filteredProducts()"
+  [prodCount]="prodCount()"
+  [prodToBuyCount]="prodToBuyCount()"
+  [prodBoughtCount]="prodBoughtCount()"
+  [filteredProdCount]="filteredProdCount()"
+  [category]="category()"
+  (add)="addProduct($event)"
+  (toggle)="toggleProduct($event)"
+  (remove)="removeProduct($event)"
+  (deleteBought)="deleteBoughtProducts()"
+  (categoryChange)="setCategory($event)"
+/>

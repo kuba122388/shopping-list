@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { ShoppingService } from '../../services/shopping';
+import { Component, input, output } from '@angular/core';
 import { Category } from '../../models/category';
+import { Product } from '../../interfaces/product';
 
 
 @Component({
@@ -10,35 +10,27 @@ import { Category } from '../../models/category';
   styleUrl: './user-list.scss',
 })
 export class UserList {
-  private shoppingService = inject(ShoppingService)
 
-  Category=Category;
+  products = input<Product[]>([]);
+  prodCount = input<number>(0);
+  prodToBuyCount = input<number>(0);
+  prodBoughtCount = input<number>(0);
+  filteredProdCount = input<number>(0);
+  category = input<Category>(Category.All);
 
-  filteredProducts = this.shoppingService.filteredProducts
-  prodToBuyCount = this.shoppingService.toBuyProdCount
-  prodBoughtCount = this.shoppingService.boughtProdCount
-  prodCount = this.shoppingService.allProdCount
-  filteredProdCount = this.shoppingService.filteredProdCount
-  category = this.shoppingService.getCategory
+  add = output<string>();
+  toggle = output<number>();
+  remove = output<number>();
+  deleteBought = output<void>();
+  categoryChange = output<Category>();
 
-  addProduct(name: string) {
-    this.shoppingService.addProduct(name)
-  }
+  Category = Category;
 
-  toggleProduct(id: number) {
-    this.shoppingService.toggleProduct(id)
-  }
 
-  removeProduct(productId: number){
-    this.shoppingService.removeProduct(productId)
-  }
-
-  deleteBoughtProducts(){
-    this.shoppingService.deleteBought()
-  }
-
-  setCategory(category: Category){
-    this.shoppingService.setCategory(category)
+  onAdd(name: string, inputEl: HTMLInputElement) {
+    if (!name.trim()) return;
+    this.add.emit(name);
+    inputEl.value = '';
   }
 }
 

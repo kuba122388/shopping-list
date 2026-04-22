@@ -2,36 +2,36 @@
 
 <div>
   <input #prodinput placeholder="Podaj kolejny produkt">
-  <button (click)="addProduct(prodinput.value); prodinput.value=''">Dodaj</button>
+  <button (click)="onAdd(prodinput.value, prodinput)">Dodaj</button>
 </div>
 
 <ul>
-  @for (product of filteredProducts(); track product.id) {
-  <li [class.bought] = "product.bought" (click) = "toggleProduct(product.id)">
-    <span class="name">Produkt: {{ product.name }}</span>
-    <button (click)="$event.stopPropagation(); removeProduct(product.id)">Usuń</button>
-  </li>
+  @for (product of products(); track product.id) {
+    <li [class.bought]="product.bought" (click)="toggle.emit(product.id)">
+      <span class="name">Produkt: {{ product.name }}</span>
+      <button (click)="$event.stopPropagation(); remove.emit(product.id)">Usuń</button>
+    </li>
   }
 </ul>
 
 <p>
-  Delete all bought products <button (click)="deleteBoughtProducts()">Delete</button>
+  Delete all bought products
+  <button (click)="deleteBought.emit()">Delete</button>
 </p>
 
 <p>
-  All products count: {{prodCount()}} <br>
-  Products to buy count: {{prodToBuyCount()}} <br>
-  Products bought count: {{prodBoughtCount()}} <br>
+  All products count: {{ prodCount() }} <br>
+  Products to buy count: {{ prodToBuyCount() }} <br>
+  Products bought count: {{ prodBoughtCount() }} <br>
 </p>
 
 <p class="filters">
-  <button (click) = "setCategory(Category.All)">Wszystkie</button>
-  <button (click) = "setCategory(Category.ToBuy)">Do kupienia</button>
-  <button (click) = "setCategory(Category.Bought)">Kupione</button>
+  <button (click)="categoryChange.emit(Category.All)">Wszystkie</button>
+  <button (click)="categoryChange.emit(Category.ToBuy)">Do kupienia</button>
+  <button (click)="categoryChange.emit(Category.Bought)">Kupione</button>
 </p>
 
 <p>
-  Chosen filter: {{category()}}<br>
-  Filtered products count: {{filteredProdCount()}}
+  Chosen filter: {{ category() }}<br>
+  Filtered products count: {{ filteredProdCount() }}
 </p>
-

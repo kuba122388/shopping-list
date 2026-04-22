@@ -1,13 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { UserList } from "./components/user-list/user-list";
+import { UserListContainer } from './components/user-list/user-list-container';
 
 @Component({
   selector: 'app-root',
-  imports: [UserList],
+  imports: [UserListContainer],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('Shopping_list');
-
 }
